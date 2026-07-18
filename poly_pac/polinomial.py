@@ -1,3 +1,6 @@
+from numbers import Number
+from itertools import zip_longest
+
 class Polynomial:    
     def __init__(self, coefs):
         self.coefficients = coefs
@@ -22,14 +25,43 @@ class Polynomial:
             elif coef < -1 and i == 1:
                 terms.append(f" - {abs(coef)}x")
             #si el coeficiente es 1 o -1, se agrega el término con x^i con el signo
-            elif coef == 1 and i > 1: 
+            if coef == 1 and i > 1: 
                 terms.append(f" + x^{i}")
             elif coef == -1 and i > 1:
                 terms.append(f" - x^{i}")             
               
         return "".join(terms)
     
+    def __eq__(self, other):
+        if isinstance(other, Polynomial):
+            return self.coefficients == other.coefficients
+        return False
+    
+    
+
     def degree(self):
         return len(self.coefficients) - 1
     
+    def __add__(self, other):
 
+        if isinstance(other, Polynomial):
+            common = min(self.degree(), other.degree()) + 1
+            coefs = tuple(a + b for a, b in zip(self.coefficients, other.coefficients))
+            coefs += self.coefficients[common:] + other.coefficients[common:]
+            return Polynomial(coefs)
+
+        elif isinstance(other, Number):
+            return Polynomial((self.coefficients[0] + other,) + self.coefficients[1:])
+        
+        else:
+            return NotImplemented
+        
+    def __radd__(self, other):
+
+        if isinstance(other, Number):
+            return Polynomial((self.coefficients[0] + other,) + self.coefficients[1:])
+        else:
+            return NotImplemented
+
+
+    

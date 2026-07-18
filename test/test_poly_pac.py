@@ -1,4 +1,5 @@
 from poly_pac import Polynomial
+import pytest
 
 def test_polynomial_str():
     p = Polynomial([1, 0, -2, 3])
@@ -10,17 +11,17 @@ def test_polynomial_degree():
     p = Polynomial([1, 2, 3])
     assert p.degree() == 2
 
-import pytest
 def test_equality():
     assert Polynomial((0, 1)) == Polynomial((0, 1))
 
-
 @pytest.mark.parametrize(
     "a, b, sum",
-    (((0,), (0, 1), (0, 1)),
-     ((2, 0, 3), (1, 2), (3, 2, 3)),
-     ((4, 2), (10, 2, 4), (14, 4, 4)))
-    )
+    [
+        ((0,), (0, 1), (0, 1)),
+        ((2, 0, 3), (1, 2), (3, 2, 3)),
+        ((4, 2), (10, 2, 4), (14, 4, 4))
+    ]
+)
 def test_add(a, b, sum):
     assert Polynomial(a) + Polynomial(b) == Polynomial(sum)
 
