@@ -45,10 +45,8 @@ class Polynomial:
     def __add__(self, other):
 
         if isinstance(other, Polynomial):
-            common = min(self.degree(), other.degree()) + 1
-            coefs = tuple(a + b for a, b in zip(self.coefficients, other.coefficients))
-            coefs += self.coefficients[common:] + other.coefficients[common:]
-            return Polynomial(coefs)
+            new_coef = tuple(a + b for a,b in zip_longest(self.coefficients, other.coefficients, fillvalue=0))
+            return Polynomial(new_coef)
 
         elif isinstance(other, Number):
             return Polynomial((self.coefficients[0] + other,) + self.coefficients[1:])
