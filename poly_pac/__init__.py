@@ -1,1 +1,1 @@
-from .polinomial import Polynomial
+from .polinomial import Polynomial  # noqa: F401
