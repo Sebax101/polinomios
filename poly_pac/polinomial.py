@@ -15,21 +15,26 @@ class Polynomial:
             # si coeficiente es 0, no se agrega el término
             if coef == 0:
                 continue
-            # si es el primer término, se agrega sin signo
-            if i == 0:
+    # si es el primer término, se agrega sin signo
+            elif i == 0:
                 terms.append(f"{coef}")
-            # si el grado es mayor a 1, se agrega el término con x^i
-            if coef > 1 and i > 1:
+    # si el grado es mayor a 1, se agrega el término con x^i
+            elif coef > 1 and i > 1:
                 terms.append(f" + {coef}x^{i}")
             elif coef < -1 and i > 1:
                 terms.append(f" - {abs(coef)}x^{i}")
-            # si el grado es 1, se agrega el término con x
-            if coef > 1 and i == 1:
+    # si el grado es 1, se agrega el término con x
+            elif coef > 1 and i == 1:
                 terms.append(f" + {coef}x")
             elif coef < -1 and i == 1:
                 terms.append(f" - {abs(coef)}x")
-            # si el coeficiente es 1 o -1, se agrega el término con x^i
-            if coef == 1 and i > 1:
+    # si el grado es 1 y el coeficiente es 1 o -1, se agrega el término con x
+            elif coef == 1 and i == 1:
+                terms.append(" + x")
+            elif coef == -1 and i == 1:
+                terms.append(" - x")
+    # si el coeficiente es 1 o -1, se agrega el término con x^i
+            elif coef == 1 and i > 1:
                 terms.append(f" + x^{i}")
             elif coef == -1 and i > 1:
                 terms.append(f" - x^{i}")
