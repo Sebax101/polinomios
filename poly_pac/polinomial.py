@@ -5,9 +5,11 @@ from itertools import zip_longest
 class Polynomial:
 
     def __init__(self, coefs):
+        """Constructor de la clase Polynomial."""
         self.coefficients = coefs
 
     def __str__(self):
+        """Representación en cadena del polinomio."""
         terms = []
         for i, coef in enumerate(self.coefficients):
             # si coeficiente es 0, no se agrega el término
@@ -34,21 +36,22 @@ class Polynomial:
         return "".join(terms)
 
     def __eq__(self, other):
+        """Compara dos polinomios para ver si son iguales."""
         if isinstance(other, Polynomial):
             return self.coefficients == other.coefficients
         return False
 
     def degree(self):
+        """Devuelve el grado del polinomio."""
         return len(self.coefficients) - 1
 
     def __add__(self, other):
-
+        """Suma dos polinomios."""
         if isinstance(other, Polynomial):
             new_coef = tuple(a + b for a, b in zip_longest(
                 self.coefficients, other.coefficients, fillvalue=0)
                 )
             return Polynomial(new_coef)
-
         elif isinstance(other, Number):
             return Polynomial(
                 (self.coefficients[0] + other,) + self.coefficients[1:]
@@ -57,7 +60,7 @@ class Polynomial:
             return NotImplemented
 
     def __radd__(self, other):
-
+        """Suma un número a un polinomio."""
         if isinstance(other, Number):
             return Polynomial(
                 (self.coefficients[0] + other,) + self.coefficients[1:]
