@@ -1,12 +1,12 @@
 from numbers import Number
-from itertools import zip_longest
+import numpy as np
 
 
 class Polynomial:
 
     def __init__(self, coefs):
         """Constructor de la clase Polynomial."""
-        self.coefficients = coefs
+        self.coefficients = np.array(coefs)
 
     def __str__(self):
         """Representación en cadena del polinomio."""
@@ -40,10 +40,14 @@ class Polynomial:
                 terms.append(f" - x^{i}")
         return "".join(terms)
 
+    def __repr__(self):
+        """Representación en cadena del polinomio para depuración."""
+        return self.__str__()
+
     def __eq__(self, other):
         """Compara dos polinomios para ver si son iguales."""
         if isinstance(other, Polynomial):
-            return self.coefficients == other.coefficients
+            return np.array_equal(self.coefficients, other.coefficients)
         return False
 
     def degree(self):
@@ -51,24 +55,66 @@ class Polynomial:
         return len(self.coefficients) - 1
 
     def __add__(self, other):
-        """Suma dos polinomios."""
+        """Suma dos polinomios o de un Polinomio con un número."""
         if isinstance(other, Polynomial):
-            new_coef = tuple(a + b for a, b in zip_longest(
-                self.coefficients, other.coefficients, fillvalue=0)
-                )
+            len_self = len(self.coefficients)
+            len_other = len(other.coefficients)
+            max_len = max(len_self, len_other)
+
+            c1 = np.pad(self.coefficients, (0, max_len - len_self), 'constant')
+            c2 = np.pad(other.coefficients, (0, max_len - len_other), 'constant')
+
+            new_coef = np.add(c1, c2)
             return Polynomial(new_coef)
         elif isinstance(other, Number):
-            return Polynomial(
-                (self.coefficients[0] + other,) + self.coefficients[1:]
-                )
-        else:
-            return NotImplemented
+            new_coef = self.__add__(Polynomial((other,)))
+            return new_coef
+        return NotImplemented
 
     def __radd__(self, other):
         """Suma un número a un polinomio."""
         if isinstance(other, Number):
-            return Polynomial(
-                (self.coefficients[0] + other,) + self.coefficients[1:]
-                )
-        else:
-            return NotImplemented
+            new_coef = self.__add__(Polynomial((other,)))
+            return new_coef
+        return NotImplemented
+
+    def __sub__(self, other):
+        """Resta dos polinomios o de un Polinomio con un número."""
+        if isinstance(other, Polynomial):
+            len_self = len(self.coefficients)
+            len_other = len(other.coefficients)
+            max_len = max(len_self, len_other)
+
+            c1 = np.pad(self.coefficients, (0, max_len - len_self), 'constant')
+            c2 = np.pad(other.coefficients, (0, max_len - len_other), 'constant')
+
+            new_coef = np.subtract(c1, c2)
+            return Polynomial(new_coef)
+        elif isinstance(other, Number):
+            new_coef = self.__sub__(Polynomial((other,)))
+            return new_coef
+        return NotImplemented
+
+    def __rsub__(self, other):
+        """Resta un polinomio a un número."""
+        if isinstance(other, Number):
+            new_coef = Polynomial((other,)).__sub__(self)
+            return new_coef
+        return NotImplemented
+
+    def __mul__(self, other):
+        """Multiplica dos polinomios o de un Polinomio con un número."""
+        if isinstance(other, Polynomial):
+            new_coef = np.polymul(self.coefficients, other.coefficients)
+            return Polynomial(new_coef)
+        elif isinstance(other, Number):
+            new_coef = self.coefficients * other
+            return Polynomial(new_coef)
+        return NotImplemented
+
+    def __rmul__(self, other):
+        """Multiplica un número a un polinomio."""
+        if isinstance(other, Number):
+            new_coef = self.coefficients * other
+            return Polynomial(new_coef)
+        return NotImplemented
