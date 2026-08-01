@@ -57,9 +57,14 @@ class Polynomial:
             return np.array_equal(self.coefficients, other.coefficients)
         return False
 
-    def degree(self):
-        """Devuelve el grado del polinomio."""
-        return len(self.coefficients) - 1
+    def __call__(self, x):
+        """Evalúa el polinomio en un valor de x."""
+        return np.polyval(self.coefficients[::-1], x)
+
+    def __neg__(self):
+        """Devuelve el polinomio negado."""
+        new_coef = -self.coefficients
+        return Polynomial(new_coef)
 
     def __add__(self, other):
         """Suma dos polinomios o de un Polinomio con un número."""
@@ -126,11 +131,15 @@ class Polynomial:
             return Polynomial(new_coef)
         return NotImplemented
 
+    def degree(self):
+        """Devuelve el grado del polinomio."""
+        return len(self.coefficients) - 1
+
     def graph(self, x_range=(-10, 10)):
         """Grafica el polinomio en un rango de valores de x."""
 
         x = np.linspace(x_range[0], x_range[1], 10000)
-        y = np.polyval(self.coefficients[::-1], x[:])
+        y = self.__call__(x)
 
         sns.set_style("darkgrid")
 
