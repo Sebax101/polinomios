@@ -1,5 +1,7 @@
 from numbers import Number
 import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 class Polynomial:
@@ -38,7 +40,12 @@ class Polynomial:
                 terms.append(f" + x^{i}")
             elif coef == -1 and i > 1:
                 terms.append(f" - x^{i}")
-        return "".join(terms)
+
+            text = "".join(terms)
+            text = text.strip()
+        if text[0] == "+" or text[0] == "-":
+            text = text[1:]
+        return text
 
     def __repr__(self):
         """Representación en cadena del polinomio para depuración."""
@@ -118,3 +125,30 @@ class Polynomial:
             new_coef = self.coefficients * other
             return Polynomial(new_coef)
         return NotImplemented
+
+    def graph(self, x_range=(-10, 10)):
+        """Grafica el polinomio en un rango de valores de x."""
+
+        x = np.linspace(x_range[0], x_range[1], 10000)
+        y = np.polyval(self.coefficients[::-1], x[:])
+
+        sns.set_style("darkgrid")
+
+        sns.lineplot(x=x, y=y, color='C0', linewidth=1.5, zorder=3)
+
+        plt.axvline(
+            x=0, color='black', linewidth=1.0, linestyle='--', alpha=0.4, zorder=2
+            )
+        plt.axhline(
+            y=0, color='black', linewidth=1.0, linestyle='--', alpha=0.4, zorder=2
+            )
+
+        plt.title(f"Polynomial: {self}", fontsize=14, fontweight='bold')
+        plt.xlabel("x", fontsize=12, fontweight='semibold')
+        plt.ylabel("f(x)", fontsize=12, fontweight='semibold')
+
+        plt.xticks(fontsize=8)
+        plt.yticks(fontsize=8)
+        plt.ylim(top=max(y))
+
+        plt.show()
