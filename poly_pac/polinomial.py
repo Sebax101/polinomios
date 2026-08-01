@@ -43,7 +43,7 @@ class Polynomial:
 
             text = "".join(terms)
             text = text.strip()
-        if text[0] == "+" or text[0] == "-":
+        if text[0] == "+":
             text = text[1:]
         return text
 
