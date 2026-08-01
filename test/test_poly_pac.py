@@ -30,6 +30,18 @@ def test_add(a, b, sum):
     assert Polynomial(a) + Polynomial(b) == Polynomial(sum)
 
 
+@pytest.mark.parametrize(
+    "a, b, diff",
+    [
+        ((0,), (0, 1), (0, -1)),
+        ((2, 0, 3), (1, 2), (1, -2, 3)),
+        ((4, 2), (10, 2, 4), (-6, 0, -4))
+    ]
+)
+def test_sub(a, b, diff):
+    assert Polynomial(a) - Polynomial(b) == Polynomial(diff)
+
+
 def test_add_scalar():
     assert Polynomial((2, 1)) + 3 == Polynomial((5, 1))
 
@@ -41,3 +53,20 @@ def test_reverse_add_scalar():
 def test_add_unknown():
     with pytest.raises(TypeError):
         Polynomial((1,)) + "frog"
+
+
+@pytest.mark.parametrize(
+    "a, b, prod",
+    [
+        ((2,), (1, 3), (2, 6)),
+        ((1, 2), (3, 1), (3, 7, 2)),
+        ((-1, 0, 1), (2, 3), (-2, -3, 2, 3)),
+        ((4, 2), (0,), (0, 0)),
+    ],
+)
+def test_mul(a, b, prod):
+    assert Polynomial(a) * Polynomial(b) == Polynomial(prod)
+
+
+def test_mul_scalar():
+    assert Polynomial((2, 1)) * 3 == Polynomial((6, 3))
